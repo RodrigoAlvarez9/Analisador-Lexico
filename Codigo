@@ -1,8 +1,10 @@
-Palavras = ['while','do']
-operadores = ['<','=','+']
+import json
+
+Palavras = ['while', 'do']
+operadores = ['<', '=', '+']
 terminador = [';']
-numeros = ['0','1','2','3','4','5','6','7','8','9']
-ident = ['i','j']
+numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+ident = ['i', 'j']
 
 codigo = input('Digite o código: ')
 
@@ -15,46 +17,46 @@ tabela = []
 linha = []
 try:
     for caractere in codigo:
-        if caractere != ' ' and  caractere != ';':
+        if caractere != ' ' and caractere != ';':
             if not token:
                 posição = pos
             token.append(caractere)
         else:
             if token:
                 data = (0, posição,)
-                if token[i] in numeros:
+                if token[0] in numeros:
                     tk = ''.join(token)
                     linha.append(tk)
                     linha.append('Constante')
                     linha.append(len(tk))
                     linha.append(data)
                     tabela.append(linha)
-                    linha.clear()
-                    token.clear()
+                    linha = []
+                    token = []
                 else:
                     tk = ''.join(token)
-                    token.clear()
+                    token = []
                     if tk in Palavras:
                         linha.append(tk)
                         linha.append('Palavra Reservada')
                         linha.append(len(tk))
                         linha.append(data)
                         tabela.append(linha)
-                        linha.clear()
+                        linha = []
                     elif tk in operadores:
                         linha.append(tk)
                         linha.append('Operador')
                         linha.append(len(tk))
                         linha.append(data)
                         tabela.append(linha)
-                        linha.clear()
+                        linha = []
                     elif tk in ident:
                         linha.append(tk)
                         linha.append('Identificador')
                         linha.append(len(tk))
                         linha.append(data)
                         tabela.append(linha)
-                        linha.clear()
+                        linha = []
                     else:
                         raise ValueError('Token inválido: {}'.format(tk))
             if caractere == ';':
@@ -64,15 +66,16 @@ try:
                 linha.append(len(caractere))
                 linha.append(data)
                 tabela.append(linha)
-                linha.clear()
+                linha = []
         pos = pos+1
 except ValueError as e:
     print('Erro:', e)
 else:
     try:
         with open('tabela.json', 'w') as arquivo:
-            arquivo.write(json.dumps(tabela))
+            json.dump(tabela, arquivo)
     except IOError as e:
         print('Erro ao escrever arquivo:', e)
     else:
         print('Tabela gerada com sucesso.')
+
